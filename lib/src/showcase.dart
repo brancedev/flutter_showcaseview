@@ -60,6 +60,7 @@ class Showcase extends StatefulWidget {
   final VoidCallback? onTargetClick;
   final bool? disposeOnTap;
   final bool disableAnimation;
+  final BorderRadius? toolTipBorderRadius;
 
   const Showcase({
     required this.key,
@@ -70,6 +71,7 @@ class Showcase extends StatefulWidget {
     this.overlayColor = Colors.black,
     this.overlayOpacity = 0.75,
     this.titleTextStyle,
+    this.toolTipBorderRadius,
     this.descTextStyle,
     this.showcaseBackgroundColor = Colors.white,
     this.textColor = Colors.black,
@@ -85,15 +87,9 @@ class Showcase extends StatefulWidget {
         container = null,
         assert(overlayOpacity >= 0.0 && overlayOpacity <= 1.0,
             "overlay opacity should be >= 0.0 and <= 1.0."),
-        assert(
-            onTargetClick == null
-                ? true
-                : (disposeOnTap == null ? false : true),
+        assert(onTargetClick == null ? true : (disposeOnTap == null ? false : true),
             "disposeOnTap is required if you're using onTargetClick"),
-        assert(
-            disposeOnTap == null
-                ? true
-                : (onTargetClick == null ? false : true),
+        assert(disposeOnTap == null ? true : (onTargetClick == null ? false : true),
             "onTargetClick is required if you're using disposeOnTap");
 
   const Showcase.withWidget({
@@ -108,6 +104,7 @@ class Showcase extends StatefulWidget {
     this.overlayColor = Colors.black,
     this.overlayOpacity = 0.75,
     this.titleTextStyle,
+    this.toolTipBorderRadius,
     this.descTextStyle,
     this.showcaseBackgroundColor = Colors.white,
     this.textColor = Colors.black,
@@ -155,7 +152,10 @@ class _ShowcaseState extends State<Showcase> with TickerProviderStateMixin {
       curve: Curves.easeInOut,
     );
 
-    position = GetPosition(key: widget.key);
+    position = GetPosition(
+      key: widget.key,
+      context: context,
+    );
   }
 
   @override
@@ -183,9 +183,7 @@ class _ShowcaseState extends State<Showcase> with TickerProviderStateMixin {
       _slideAnimationController.forward();
       if (ShowCaseWidget.of(context)!.autoPlay) {
         timer = Timer(
-            Duration(
-                seconds: ShowCaseWidget.of(context)!.autoPlayDelay.inSeconds),
-            _nextIfAny);
+            Duration(seconds: ShowCaseWidget.of(context)!.autoPlayDelay.inSeconds), _nextIfAny);
       }
     }
   }
@@ -267,6 +265,7 @@ class _ShowcaseState extends State<Showcase> with TickerProviderStateMixin {
             ToolTipWidget(
               position: position,
               offset: offset,
+              borderRadius: widget.toolTipBorderRadius,
               screenSize: screenSize,
               title: widget.title,
               description: widget.description,

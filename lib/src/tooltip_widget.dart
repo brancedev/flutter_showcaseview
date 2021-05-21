@@ -50,6 +50,7 @@ class ToolTipWidget extends StatefulWidget {
   static late bool isArrowUp;
   final VoidCallback? onTooltipTap;
   final EdgeInsets? contentPadding;
+  final BorderRadius? borderRadius;
 
   ToolTipWidget(
       {this.position,
@@ -66,6 +67,7 @@ class ToolTipWidget extends StatefulWidget {
       this.showArrow,
       this.contentHeight,
       this.contentWidth,
+      this.borderRadius,
       this.onTooltipTap,
       this.contentPadding});
 
@@ -113,8 +115,7 @@ class _ToolTipWidgetState extends State<ToolTipWidget> {
 
   double? _getLeft() {
     if (_isLeft()) {
-      var leftPadding =
-          widget.position!.getCenter() - (_getTooltipWidth() * 0.1);
+      var leftPadding = widget.position!.getCenter() - (_getTooltipWidth() * 0.1);
       if (leftPadding + _getTooltipWidth() > widget.screenSize!.width) {
         leftPadding = (widget.screenSize!.width - 20) - _getTooltipWidth();
       }
@@ -131,8 +132,7 @@ class _ToolTipWidgetState extends State<ToolTipWidget> {
 
   double? _getRight() {
     if (_isRight()) {
-      var rightPadding =
-          widget.position!.getCenter() + (_getTooltipWidth() / 2);
+      var rightPadding = widget.position!.getCenter() + (_getTooltipWidth() / 2);
       if (rightPadding + _getTooltipWidth() > widget.screenSize!.width) {
         rightPadding = 14;
       }
@@ -170,8 +170,7 @@ class _ToolTipWidgetState extends State<ToolTipWidget> {
         ? widget.position!.getBottom() + (contentOffsetMultiplier * 3)
         : widget.position!.getTop() + (contentOffsetMultiplier * 3);
 
-    final num contentFractionalOffset =
-        contentOffsetMultiplier.clamp(-1.0, 0.0);
+    final num contentFractionalOffset = contentOffsetMultiplier.clamp(-1.0, 0.0);
 
     var paddingTop = ToolTipWidget.isArrowUp ? 22.0 : 0.0;
     var paddingBottom = ToolTipWidget.isArrowUp ? 0.0 : 27.0;
@@ -199,10 +198,9 @@ class _ToolTipWidgetState extends State<ToolTipWidget> {
                 child: Material(
                   color: Colors.transparent,
                   child: Container(
-                    padding:
-                        EdgeInsets.only(top: paddingTop, bottom: paddingBottom),
+                    padding: EdgeInsets.only(top: paddingTop, bottom: paddingBottom),
                     child: ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: widget.borderRadius ?? BorderRadius.circular(8),
                       child: GestureDetector(
                         onTap: widget.onTooltipTap,
                         child: Container(
@@ -225,9 +223,7 @@ class _ToolTipWidgetState extends State<ToolTipWidget> {
                                                 Theme.of(context)
                                                     .textTheme
                                                     .headline6!
-                                                    .merge(TextStyle(
-                                                        color:
-                                                            widget.textColor)),
+                                                    .merge(TextStyle(color: widget.textColor)),
                                           )
                                         : Container(),
                                     Text(
@@ -236,8 +232,7 @@ class _ToolTipWidgetState extends State<ToolTipWidget> {
                                           Theme.of(context)
                                               .textTheme
                                               .subtitle2!
-                                              .merge(TextStyle(
-                                                  color: widget.textColor)),
+                                              .merge(TextStyle(color: widget.textColor)),
                                     ),
                                   ],
                                 ),
@@ -283,8 +278,7 @@ class _ToolTipWidgetState extends State<ToolTipWidget> {
                             onSizeChange: (size) {
                               setState(() {
                                 var tempPos = position;
-                                tempPos = Offset(
-                                    position!.dx, position!.dy + size!.height);
+                                tempPos = Offset(position!.dx, position!.dy + size!.height);
                                 position = tempPos;
                               });
                             },
@@ -304,9 +298,7 @@ class _ToolTipWidgetState extends State<ToolTipWidget> {
   Widget _getArrow(double contentOffsetMultiplier) {
     final contentFractionalOffset = contentOffsetMultiplier.clamp(-1.0, 0.0);
     return Positioned(
-      top: ToolTipWidget.isArrowUp
-          ? widget.position!.getBottom()
-          : widget.position!.getTop() - 1,
+      top: ToolTipWidget.isArrowUp ? widget.position!.getBottom() : widget.position!.getTop() - 1,
       left: widget.position!.getCenter() - 24,
       child: FractionalTranslation(
         translation: Offset(0.0, contentFractionalOffset),
@@ -316,9 +308,7 @@ class _ToolTipWidgetState extends State<ToolTipWidget> {
             end: Offset(0.0, 0.150),
           ).animate(widget.animationOffset!),
           child: Icon(
-            ToolTipWidget.isArrowUp
-                ? Icons.arrow_drop_up
-                : Icons.arrow_drop_down,
+            ToolTipWidget.isArrowUp ? Icons.arrow_drop_up : Icons.arrow_drop_down,
             color: widget.tooltipColor,
             size: 50,
           ),

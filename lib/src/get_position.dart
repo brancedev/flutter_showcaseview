@@ -26,18 +26,28 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:showcaseview/showcaseview.dart';
 
 class GetPosition {
   final GlobalKey? key;
+  final BuildContext context;
 
-  GetPosition({this.key});
+  GetPosition({this.key, required this.context});
 
   Rect getRect() {
     final box = key!.currentContext!.findRenderObject() as RenderBox;
+    Offset boxGlobal;
+    try {
+      boxGlobal = box.localToGlobal(
+        const Offset(0.0, 0.0),
+        ancestor: ShowCaseWidget.of(context)!.coordinateSystemAncestor,
+      );
+    } catch (e) {
+      boxGlobal = box.localToGlobal(const Offset(0.0, 0.0), ancestor: box);
+    }
 
-    final topLeft = box.size.topLeft(box.localToGlobal(const Offset(0.0, 0.0)));
-    final bottomRight =
-        box.size.bottomRight(box.localToGlobal(const Offset(0.0, 0.0)));
+    final topLeft = box.size.topLeft(boxGlobal);
+    final bottomRight = box.size.bottomRight(boxGlobal);
 
     final rect = Rect.fromLTRB(
       topLeft.dx,
@@ -51,30 +61,64 @@ class GetPosition {
   ///Get the bottom position of the widget
   double getBottom() {
     final box = key!.currentContext!.findRenderObject() as RenderBox;
-    final bottomRight =
-        box.size.bottomRight(box.localToGlobal(const Offset(0.0, 0.0)));
+    Offset boxGlobal;
+    try {
+      boxGlobal = box.localToGlobal(
+        const Offset(0.0, 0.0),
+        ancestor: ShowCaseWidget.of(context)!.coordinateSystemAncestor,
+      );
+    } catch (e) {
+      boxGlobal = box.localToGlobal(const Offset(0.0, 0.0), ancestor: box);
+    }
+    final bottomRight = box.size.bottomRight(boxGlobal);
     return bottomRight.dy;
   }
 
   ///Get the top position of the widget
   double getTop() {
     final box = key!.currentContext!.findRenderObject() as RenderBox;
-    final topLeft = box.size.topLeft(box.localToGlobal(const Offset(0.0, 0.0)));
+    Offset boxGlobal;
+    try {
+      boxGlobal = box.localToGlobal(
+        const Offset(0.0, 0.0),
+        ancestor: ShowCaseWidget.of(context)!.coordinateSystemAncestor,
+      );
+    } catch (e) {
+      boxGlobal = box.localToGlobal(const Offset(0.0, 0.0), ancestor: box);
+    }
+    final topLeft = box.size.topLeft(boxGlobal);
     return topLeft.dy;
   }
 
   ///Get the left position of the widget
   double getLeft() {
     final box = key!.currentContext!.findRenderObject() as RenderBox;
-    final topLeft = box.size.topLeft(box.localToGlobal(const Offset(0.0, 0.0)));
+    Offset boxGlobal;
+    try {
+      boxGlobal = box.localToGlobal(
+        const Offset(0.0, 0.0),
+        ancestor: ShowCaseWidget.of(context)!.coordinateSystemAncestor,
+      );
+    } catch (e) {
+      boxGlobal = box.localToGlobal(const Offset(0.0, 0.0), ancestor: box);
+    }
+    final topLeft = box.size.topLeft(boxGlobal);
     return topLeft.dx;
   }
 
   ///Get the right position of the widget
   double getRight() {
     final box = key!.currentContext!.findRenderObject() as RenderBox;
-    final bottomRight =
-        box.size.bottomRight(box.localToGlobal(const Offset(0.0, 0.0)));
+    Offset boxGlobal;
+    try {
+      boxGlobal = box.localToGlobal(
+        const Offset(0.0, 0.0),
+        ancestor: ShowCaseWidget.of(context)!.coordinateSystemAncestor,
+      );
+    } catch (e) {
+      boxGlobal = box.localToGlobal(const Offset(0.0, 0.0), ancestor: box);
+    }
+    final bottomRight = box.size.bottomRight(boxGlobal);
     return bottomRight.dx;
   }
 

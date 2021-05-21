@@ -28,7 +28,7 @@
 import 'package:flutter/material.dart';
 
 class ShowCaseWidget extends StatefulWidget {
-  final Builder builder;
+  final Widget child;
   final VoidCallback? onFinish;
   final Function(int?, GlobalKey)? onStart;
   final Function(int?, GlobalKey)? onComplete;
@@ -37,7 +37,7 @@ class ShowCaseWidget extends StatefulWidget {
   final bool autoPlayLockEnable;
 
   const ShowCaseWidget({
-    required this.builder,
+    required this.child,
     this.onFinish,
     this.onStart,
     this.onComplete,
@@ -47,9 +47,7 @@ class ShowCaseWidget extends StatefulWidget {
   });
 
   static GlobalKey? activeTargetWidget(BuildContext context) {
-    return context
-        .dependOnInheritedWidgetOfExactType<_InheritedShowCaseView>()!
-        .activeWidgetIds;
+    return context.dependOnInheritedWidgetOfExactType<_InheritedShowCaseView>()!.activeWidgetIds;
   }
 
   static ShowCaseWidgetState? of(BuildContext context) {
@@ -71,6 +69,9 @@ class ShowCaseWidgetState extends State<ShowCaseWidget> {
   late bool autoPlay;
   late Duration autoPlayDelay;
   late bool autoPlayLockEnable;
+  RenderObject? coordinateSystemAncestor;
+
+  final GlobalKey _key = GlobalKey();
 
   @override
   void initState() {
@@ -78,6 +79,12 @@ class ShowCaseWidgetState extends State<ShowCaseWidget> {
     autoPlayDelay = widget.autoPlayDelay;
     autoPlay = widget.autoPlay;
     autoPlayLockEnable = widget.autoPlayLockEnable;
+
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
+      setState(() {
+        coordinateSystemAncestor = _key.currentContext!.findRenderObject();
+      });
+    });
   }
 
   void startShowCase(List<GlobalKey> widgetIds) {
@@ -126,9 +133,12 @@ class ShowCaseWidgetState extends State<ShowCaseWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return _InheritedShowCaseView(
-      child: widget.builder,
-      activeWidgetIds: ids?.elementAt(activeWidgetId!),
+    return SizedBox.expand(
+      key: _key,
+      child: _InheritedShowCaseView(
+        child: widget.child,
+        activeWidgetIds: ids?.elementAt(activeWidgetId!),
+      ),
     );
   }
 }
